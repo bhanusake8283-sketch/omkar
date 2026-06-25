@@ -1,0 +1,14 @@
+{
+  "name": "Sake Clips Store",
+  "short_name": "SakeClips",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#c47a2e",
+  "background_color": "#f7f4f0",
+  "display": "standalone"
+}
