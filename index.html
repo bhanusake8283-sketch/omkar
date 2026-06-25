@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sake Clips Store – Curated Amazon Picks</title>
+<meta name="description" content="Handpicked Amazon products curated by Sake Clips Store."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<style>
+/* ══════════════════════════════════════════════
+   RESET & TOKENS
+══════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',system-ui,sans-serif;
+  background:#f7f4f0;
+  color:#1c1814;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+:root{
+  --bg:#f7f4f0;
+  --bg2:#eeebe5;
+  --bg3:#e5e1d9;
+  --surface:#ffffff;
+  --border:#dedad2;
+  --border2:#c8c3b8;
+  --t1:#1c1814;
+  --t2:#574f46;
+  --t3:#9e9488;
+  --accent:#c47a2e;
+  --accent-l:#fef6ec;
+  --accent-d:#9b5e1c;
+  --green:#3a7a52;
+  --green-l:#edf7f2;
+  --red:#c43e3e;
+  --red-l:#fdf0f0;
+  --blue:#2e5fa3;
+  --r4:4px;--r8:8px;--r12:12px;--r16:16px;--r24:24px;--r999:999px;
+  --sh1:0 1px 3px rgba(0,0,0,.06);
+  --sh2:0 4px 16px rgba(0,0,0,.09);
+  --sh3:0 10px 36px rgba(0,0,0,.13);
+}
+
+/* ══════════════════════════════════════════════
+   SETUP BANNER
+══════════════════════════════════════════════ */
+#setupBanner{
+  background:#1c1814;
+  color:#fff;
+  padding:14px 2rem;
+  text-align:center;
+  font-size:13.5px;
+  line-height:1.9;
+  display:none;
+}
+#setupBanner code{
+  background:rgba(255,255,255,.13);
+  color:#f5c07a;
+  padding:1px 7px;
+  border-radius:4px;
+  font-family:monospace;
+  font-size:12.5px;
+}
+#setupBanner a{color:#f5c07a;text-underline-offset:3px}
+
+/* ══════════════════════════════════════════════
+   ADMIN BAR
+══════════════════════════════════════════════ */
+#adminBar{
+  background:linear-gradient(90deg,#fef6ec,#fff9f2);
+  border-bottom:1px solid #f3dcb9;
+  padding:8px 2rem;
+  font-size:12.5px;
+  color:var(--accent-d);
+  display:none;
+  align-items:center;
+  gap:10px;
+  font-weight:500;
+}
+.pulse-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent);position:relative;flex-shrink:0;
+}
+.pulse-dot::after{
+  content:'';position:absolute;inset:-3px;
+  border-radius:50%;border:1.5px solid var(--accent);
+  animation:pulseRing 2s ease infinite;
+}
+@keyframes pulseRing{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:0;transform:scale(1.9)}}
+.admin-logout{
+  margin-left:auto;font-size:12px;
+  cursor:pointer;text-decoration:underline;
+  color:var(--accent-d);background:none;border:none;
+  font-family:'DM Sans',sans-serif;cursor:pointer;
+}
+
+/* ══════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════ */
+header{
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:300;
+  box-shadow:var(--sh1);
+}
+.hdr{
+  max-width:1360px;margin:0 auto;
+  padding:0 2rem;height:70px;
+  display:flex;align-items:center;gap:18px;
+}
+.logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:27px;font-weight:700;
+  color:var(--t1);letter-spacing:-.6px;
+  text-decoration:none;white-space:nowrap;flex-shrink:0;
+  line-height:1;
+}
+.logo span{color:var(--accent)}
+
+/* search */
+.search-box{
+  flex:1;max-width:540px;position:relative;
+}
+.search-box input{
+  width:100%;height:44px;
+  padding:0 48px 0 18px;
+  border:1.5px solid var(--border);
+  border-radius:var(--r999);
+  background:var(--bg);
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  color:var(--t1);outline:none;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+}
+.search-box input::placeholder{color:var(--t3)}
+.search-box input:focus{
+  border-color:var(--accent);
+  background:var(--surface);
+  box-shadow:0 0 0 3.5px rgba(196,122,46,.13);
+}
+.search-box .ico{
+  position:absolute;right:15px;top:50%;transform:translateY(-50%);
+  color:var(--t3);pointer-events:none;transition:color .2s;
+}
+.search-box input:focus~.ico{color:var(--accent)}
+.search-clr{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--t3);font-size:17px;line-height:1;
+  display:none;transition:color .2s;padding:0;
+}
+.search-clr:hover{color:var(--t1)}
+
+/* header buttons */
+.btn-login{
+  display:flex;align-items:center;gap:6px;
+  padding:0 18px;height:42px;
+  background:none;border:1.5px solid var(--border);
+  border-radius:var(--r999);
+  font-family:'DM Sans',sans-serif;font-size:13.5px;
+  color:var(--t2);cursor:pointer;white-space:nowrap;flex-shrink:0;
+  transition:border-color .2s,color .2s;
+}
+.btn-login:hover{border-color:var(--accent);color:var(--accent)}
+.btn-add-hdr{
+  display:none;align-items:center;gap:8px;
+  padding:0 22px;height:42px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r999);
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  box-shadow:0 3px 14px rgba(196,122,46,.32);
+  transition:background .2s,box-shadow .2s,transform .12s;
+}
+.btn-add-hdr:hover{background:var(--accent-d);box-shadow:0 5px 20px rgba(155,94,28,.38)}
+.btn-add-hdr:active{transform:scale(.97)}
+
+/* ══════════════════════════════════════════════
+   HERO
+══════════════════════════════════════════════ */
+.hero{
+  background:linear-gradient(135deg,#27211a 0%,#3c2f21 45%,#1d1710 100%);
+  color:#fff;padding:60px 2rem 56px;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 55% 90% at 75% 50%,rgba(196,122,46,.22),transparent 70%);
+}
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;
+  background:linear-gradient(to bottom,transparent,var(--bg));
+}
+.hero-inner{max-width:1360px;margin:0 auto;position:relative;z-index:1}
+.hero h1{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(34px,5.5vw,58px);font-weight:700;
+  line-height:1.08;letter-spacing:-1.2px;margin-bottom:16px;
+}
+.hero h1 em{color:#e8a55a;font-style:normal}
+.hero p{
+  font-size:15.5px;color:rgba(255,255,255,.62);
+  max-width:500px;line-height:1.7;margin-bottom:30px;
+}
+.hero-tags{display:flex;flex-wrap:wrap;gap:9px}
+.hero-tag{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.13);
+  color:rgba(255,255,255,.72);
+  font-size:12.5px;padding:5px 15px;border-radius:var(--r999);
+}
+.hero-tag b{color:#e8a55a;font-weight:600}
+
+/* ══════════════════════════════════════════════
+   MAIN CONTENT
+══════════════════════════════════════════════ */
+.wrap{max-width:1360px;margin:0 auto;padding:2.5rem 2rem 5rem}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:2rem;flex-wrap:wrap;gap:14px;
+}
+.topbar-l{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.section-ttl{
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px;font-weight:600;
+  color:var(--t1);letter-spacing:-.4px;
+}
+.count-pill{
+  background:var(--bg2);color:var(--t3);
+  font-size:13px;font-weight:500;
+  padding:3px 11px;border-radius:var(--r999);
+}
+.sort-sel{
+  height:38px;padding:0 13px;
+  border:1.5px solid var(--border);border-radius:var(--r8);
+  background:var(--surface);
+  font-family:'DM Sans',sans-serif;font-size:13px;color:var(--t2);
+  outline:none;cursor:pointer;transition:border-color .2s;
+}
+.sort-sel:focus{border-color:var(--accent)}
+
+/* ══════════════════════════════════════════════
+   PRODUCT GRID
+══════════════════════════════════════════════ */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:22px;
+}
+
+/* ── card ── */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r16);
+  overflow:hidden;cursor:pointer;
+  display:flex;flex-direction:column;
+  position:relative;
+  transition:transform .26s ease,box-shadow .26s ease,border-color .26s ease;
+  animation:cardIn .35s ease both;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--sh2);
+  border-color:var(--border2);
+}
+
+/* image area */
+.card-img-wrap{
+  aspect-ratio:1/1;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;overflow:hidden;position:relative;
+}
+.card-img{
+  max-width:100%;max-height:100%;object-fit:contain;
+  transition:transform .38s ease;
+}
+.card:hover .card-img{transform:scale(1.07)}
+.card-hov{
+  position:absolute;inset:0;
+  background:rgba(196,122,46,.08);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .25s;
+}
+.card:hover .card-hov{opacity:1}
+.card-hov-pill{
+  background:var(--accent);color:#fff;
+  font-size:12px;font-weight:500;
+  padding:7px 17px;border-radius:var(--r999);
+  box-shadow:var(--sh1);
+}
+
+/* badges */
+.card-badge{
+  position:absolute;top:10px;left:10px;z-index:2;
+  font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  padding:3px 10px;border-radius:var(--r999);
+}
+.b-new{background:var(--accent);color:#fff}
+.b-popular{background:#1d4775;color:#fff}
+.b-toprated{background:var(--green);color:#fff}
+.b-sale{background:var(--red);color:#fff}
+
+/* admin delete btn */
+.card-del{
+  position:absolute;top:9px;right:9px;z-index:3;
+  width:30px;height:30px;
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--border);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--t3);font-size:14px;
+  opacity:0;transition:opacity .2s,color .2s,background .2s,border-color .2s;
+}
+.card:hover .card-del{opacity:1}
+.card-del:hover{color:var(--red);background:var(--red-l);border-color:var(--red)}
+
+/* body */
+.card-body{
+  padding:13px 15px 16px;flex:1;
+  display:flex;flex-direction:column;gap:7px;
+  border-top:1px solid var(--border);
+}
+.card-name{
+  font-size:13px;font-weight:500;color:var(--t1);
+  line-height:1.52;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-price{
+  font-size:15.5px;font-weight:600;
+  color:var(--accent-d);letter-spacing:-.3px;
+}
+.card-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:auto;
+}
+.amz-tag{
+  font-size:11.5px;color:var(--t3);font-weight:500;
+  display:flex;align-items:center;gap:4px;
+}
+.card-arrow{
+  width:28px;height:28px;background:var(--bg2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--t2);font-size:13px;
+  transition:background .2s,color .2s;
+}
+.card:hover .card-arrow{background:var(--accent);color:#fff}
+
+/* ══════════════════════════════════════════════
+   SKELETON LOADER
+══════════════════════════════════════════════ */
+.skel-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:22px;
+}
+.skel-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r16);overflow:hidden;
+}
+.skel-img{aspect-ratio:1;background:var(--bg2);animation:skelPulse 1.6s ease infinite}
+.skel-body{padding:13px 15px 16px;display:flex;flex-direction:column;gap:10px}
+.skel-line{background:var(--bg2);border-radius:4px;height:11px;animation:skelPulse 1.6s ease infinite}
+.skel-line.s{width:45%}
+@keyframes skelPulse{0%,100%{opacity:.9}50%{opacity:.4}}
+
+/* ══════════════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════════════ */
+.empty{
+  grid-column:1/-1;text-align:center;padding:110px 20px;
+}
+.empty-ico{font-size:60px;margin-bottom:20px;opacity:.38}
+.empty h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:600;
+  color:var(--t2);margin-bottom:10px;
+}
+.empty p{font-size:14px;color:var(--t3);max-width:300px;margin:0 auto 24px;line-height:1.65}
+.btn-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:11px 26px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r999);
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;transition:background .2s;
+}
+.btn-cta:hover{background:var(--accent-d)}
+
+/* ══════════════════════════════════════════════
+   MODALS
+══════════════════════════════════════════════ */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:rgba(18,14,10,.56);
+  z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  animation:ovIn .2s ease;
+}
+@keyframes ovIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--surface);
+  border-radius:22px;width:100%;max-width:490px;
+  box-shadow:var(--sh3);overflow:hidden;
+  animation:modUp .24s cubic-bezier(.34,1.5,.64,1);
+}
+.modal.sm{max-width:380px}
+@keyframes modUp{from{transform:translateY(26px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.mod-hdr{
+  padding:26px 28px 0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.mod-ttl{
+  font-family:'Cormorant Garamond',serif;
+  font-size:23px;font-weight:600;letter-spacing:-.3px;
+}
+.mod-close{
+  width:36px;height:36px;background:var(--bg2);
+  border:1px solid var(--border);border-radius:50%;
+  cursor:pointer;font-size:18px;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--t2);transition:background .2s;
+}
+.mod-close:hover{background:var(--bg3)}
+.mod-body{padding:22px 28px 28px}
+
+/* form elements */
+.field{margin-bottom:16px}
+.field label{
+  display:block;font-size:11px;font-weight:700;
+  color:var(--t2);text-transform:uppercase;letter-spacing:.9px;
+  margin-bottom:7px;
+}
+.field input,.field select{
+  width:100%;height:47px;padding:0 15px;
+  border:1.5px solid var(--border);border-radius:var(--r8);
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t1);
+  background:var(--bg);outline:none;
+  transition:border-color .2s,background .2s,box-shadow .2s;
+}
+.field input:focus,.field select:focus{
+  border-color:var(--accent);background:var(--surface);
+  box-shadow:0 0 0 3px rgba(196,122,46,.11);
+}
+.field input::placeholder{color:var(--t3)}
+.field-hint{font-size:12px;color:var(--t3);margin-top:5px;line-height:1.5}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* status */
+.st-box{
+  border-radius:var(--r8);padding:10px 14px;
+  font-size:13px;margin-bottom:16px;
+  display:flex;align-items:center;gap:9px;
+}
+.st-loading{background:var(--accent-l);color:var(--accent-d)}
+.st-error{background:var(--red-l);color:var(--red)}
+.st-ok{background:var(--green-l);color:var(--green)}
+
+/* spinner */
+.spin{
+  width:15px;height:15px;flex-shrink:0;
+  border:2px solid rgba(196,122,46,.22);
+  border-top-color:var(--accent);
+  border-radius:50%;animation:rotSpin .65s linear infinite;
+}
+.spin.wh{border:2px solid rgba(255,255,255,.3);border-top-color:#fff}
+@keyframes rotSpin{to{transform:rotate(360deg)}}
+
+/* preview */
+.preview{
+  background:var(--bg);border:1.5px solid var(--border);
+  border-radius:var(--r12);padding:16px;
+  display:flex;gap:14px;align-items:flex-start;
+  margin-bottom:18px;transition:border-color .2s;
+}
+.preview.lit{border-color:var(--accent)}
+.prev-img{
+  width:78px;height:78px;object-fit:contain;
+  border-radius:var(--r8);background:var(--surface);
+  border:1px solid var(--border);padding:6px;flex-shrink:0;
+}
+.prev-info{flex:1;min-width:0}
+.prev-name{font-size:13px;font-weight:500;line-height:1.45;color:var(--t1)}
+.prev-asin{font-size:11px;color:var(--t3);margin-top:3px;font-family:monospace}
+.prev-price{font-size:15px;font-weight:600;color:var(--accent-d);margin-top:5px}
+
+/* btn row */
+.btn-row{display:flex;gap:10px;margin-top:2px}
+.btn-ok{
+  flex:1;height:47px;
+  background:var(--accent);color:#fff;border:none;
+  border-radius:var(--r8);
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  cursor:pointer;transition:background .2s,box-shadow .2s;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-ok:hover{background:var(--accent-d);box-shadow:0 4px 14px rgba(155,94,28,.28)}
+.btn-ok:disabled{background:var(--bg3);color:var(--t3);cursor:not-allowed;box-shadow:none}
+.btn-cancel{
+  height:47px;padding:0 22px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r8);
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--t2);
+  cursor:pointer;transition:border-color .2s,background .2s;
+}
+.btn-cancel:hover{border-color:var(--border2);background:var(--bg)}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+.toast{
+  position:fixed;bottom:30px;left:50%;
+  transform:translateX(-50%) translateY(90px);
+  background:#1c1814;color:#fff;
+  padding:13px 24px;border-radius:var(--r999);
+  font-size:13.5px;font-weight:500;
+  display:flex;align-items:center;gap:9px;
+  z-index:9999;box-shadow:var(--sh3);
+  transition:transform .32s cubic-bezier(.34,1.4,.64,1),opacity .32s;
+  opacity:0;pointer-events:none;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.toast.ok::before{content:'✓';color:#5ddb8b;font-weight:700}
+.toast.err::before{content:'✕';color:#ff7272;font-weight:700}
+.toast.inf::before{content:'ℹ';color:#7abfff}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+footer{
+  background:#1c1814;color:rgba(255,255,255,.4);
+  text-align:center;padding:30px 2rem;
+  font-size:12.5px;line-height:1.8;
+}
+footer b{color:rgba(255,255,255,.68)}
+footer a{color:#e8a55a;text-decoration:none;text-underline-offset:3px}
+footer a:hover{text-decoration:underline}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════ */
+@media(max-width:700px){
+  .hdr{height:60px;padding:0 1rem;gap:10px}
+  .logo{font-size:21px}
+  .btn-add-hdr .lbl{display:none}
+  .btn-add-hdr{padding:0 15px}
+  .hero{padding:40px 1rem 48px}
+  .wrap{padding:1.5rem 1rem 4rem}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:14px}
+  .mod-hdr,.mod-body{padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+
+<!-- ── SETUP BANNER ── -->
+<div id="setupBanner">
+  ⚙️ Supabase is not configured yet. Open <code>config.js</code> and fill in your
+  <code>SUPABASE_URL</code>, <code>SUPABASE_ANON_KEY</code> and <code>ADMIN_PASSWORD</code>.
+  Then run the SQL in <a href="SETUP.md" target="_blank">SETUP.md</a> to create the products table.
+</div>
+
+<!-- ── ADMIN BAR ── -->
+<div id="adminBar">
+  <div class="pulse-dot"></div>
+  <span>Admin mode active — products you add are instantly live for all visitors</span>
+  <button class="admin-logout" onclick="doLogout()">Logout</button>
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="hdr">
+    <a class="logo" href="#">Sake <span>Clips</span> Store</a>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search products…" autocomplete="off"/>
+      <svg class="ico" id="searchIco" xmlns="http://www.w3.org/2000/svg" width="17" height="17"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <button class="search-clr" id="searchClr" onclick="clearSearch()">✕</button>
+    </div>
+
+    <button class="btn-login" id="btnLogin" onclick="openLogin()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+      Admin
+    </button>
+
+    <button class="btn-add-hdr" id="btnAdd" onclick="openAdd()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
+      <span class="lbl">Add Product</span>
+    </button>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Curated Home &amp;<br><em>Kitchen Products</em></h1>
+    <p>Handpicked Amazon affiliate deals — appliances, gadgets and home essentials our community loves.</p>
+    <div class="hero-tags">
+      <div class="hero-tag">🏠 Home Appliances</div>
+      <div class="hero-tag">🍳 Kitchen</div>
+      <div class="hero-tag">⚡ Electronics</div>
+      <div class="hero-tag"><b>✓</b> Amazon Verified Links</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MAIN ── -->
+<div class="wrap">
+  <div class="topbar">
+    <div class="topbar-l">
+      <div class="section-ttl" id="secTtl">All Products</div>
+      <div class="count-pill" id="cntPill">—</div>
+    </div>
+    <select class="sort-sel" id="sortSel" onchange="render()">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="az">Name A – Z</option>
+      <option value="za">Name Z – A</option>
+    </select>
+  </div>
+
+  <div id="productGrid"></div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <b>Sake Clips Store</b> — Amazon Affiliate Product Store<br>
+  This page contains affiliate links. We may earn a commission at no extra cost to you.<br>
+  Contact: <a href="mailto:telugu@simpleghar.com">telugu@simpleghar.com</a>
+</footer>
+
+<!-- ══════════════════════════════════════════════
+     LOGIN MODAL
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="loginOverlay" style="display:none"
+  onclick="if(event.target===this)closeLogin()">
+  <div class="modal sm">
+    <div class="mod-hdr">
+      <div class="mod-ttl">Admin Login</div>
+      <button class="mod-close" onclick="closeLogin()">✕</button>
+    </div>
+    <div class="mod-body">
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="pwInput" placeholder="Enter admin password"
+          onkeydown="if(event.key==='Enter')submitLogin()"/>
+        <div class="field-hint">Set your password in <code style="font-family:monospace;font-size:12px;background:var(--bg2);padding:1px 5px;border-radius:4px">config.js</code></div>
+      </div>
+      <div class="st-box st-error" id="loginErr" style="display:none">
+        ⚠️ Incorrect password. Please try again.
+      </div>
+      <div class="btn-row">
+        <button class="btn-cancel" onclick="closeLogin()">Cancel</button>
+        <button class="btn-ok" onclick="submitLogin()">Login →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ADD PRODUCT MODAL
+══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="addOverlay" style="display:none"
+  onclick="if(event.target===this)closeAdd()">
+  <div class="modal">
+    <div class="mod-hdr">
+      <div class="mod-ttl">Add New Product</div>
+      <button class="mod-close" onclick="closeAdd()">✕</button>
+    </div>
+    <div class="mod-body">
+
+      <!-- step 1: link -->
+      <div class="field">
+        <label>Amazon Affiliate Link</label>
+        <input type="url" id="linkInput"
+          placeholder="https://amzn.to/… or amazon.in/dp/…"/>
+        <div class="field-hint">
+          Paste any Amazon product URL — ASIN and image are auto-detected
+        </div>
+      </div>
+
+      <!-- status -->
+      <div class="st-box" id="stBox" style="display:none"></div>
+
+      <!-- preview -->
+      <div class="preview" id="prevBox" style="display:none">
+        <img class="prev-img" id="prevImg" src="" alt="product"
+          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2278%22 height=%2278%22%3E%3Crect width=%2278%22 height=%2278%22 fill=%22%23eeebe5%22/%3E%3Ctext x=%2239%22 y=%2244%22 text-anchor=%22middle%22 font-size=%2210%22 fill=%22%23bbb%22%3ENo img%3C/text%3E%3C/svg%3E'"/>
+        <div class="prev-info">
+          <div class="prev-name" id="prevName">—</div>
+          <div class="prev-asin" id="prevAsin"></div>
+          <div class="prev-price" id="prevPrice">—</div>
+        </div>
+      </div>
+
+      <!-- step 2: details -->
+      <div id="detailFields" style="display:none">
+        <div class="field">
+          <label>Product Name</label>
+          <input type="text" id="nameInput"
+            placeholder="Copy the product name from Amazon"/>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Price</label>
+            <input type="text" id="priceInput" placeholder="e.g. ₹1,299"/>
+          </div>
+          <div class="field">
+            <label>Badge</label>
+            <select id="badgeInput">
+              <option value="">None</option>
+              <option value="new">New</option>
+              <option value="popular">Popular</option>
+              <option value="toprated">Top Rated</option>
+              <option value="sale">Sale</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Custom Image URL
+            <span style="text-transform:none;letter-spacing:0;font-weight:400;font-size:11px">
+              (optional — leave blank to use Amazon image)
+            </span>
+          </label>
+          <input type="url" id="imgInput"
+            placeholder="https://… paste a direct image URL"/>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-cancel" onclick="closeAdd()">Cancel</button>
+        <button class="btn-ok" id="addBtn" onclick="submitAdd()" disabled>
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.6">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Publish to Store
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+/* ───────────────────────────────
+   STATE
+─────────────────────────────── */
+let sb = null;
+let isAdmin = false;
+let products = [];
+let searchQ = '';
+let prevData = null;
+
+/* ───────────────────────────────
+   INIT
+─────────────────────────────── */
+(function boot() {
+  // Check config
+  if (typeof SUPABASE_URL === 'undefined' || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+    document.getElementById('setupBanner').style.display = 'block';
+    showSkel();
+    document.getElementById('cntPill').textContent = 'Not configured';
+    return;
+  }
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Restore session
+  if (sessionStorage.getItem('sc_admin') === '1') setAdmin(true, false);
+
+  // Load products
+  loadProducts();
+
+  // Real-time: subscribe to changes so all visitors see updates instantly
+  sb.channel('products')
+    .on('postgres_changes',
+      { event: '*', schema: 'public', table: 'products' },
+      () => loadProducts()
+    )
+    .subscribe();
+})();
+
+/* ───────────────────────────────
+   SUPABASE DATA
+─────────────────────────────── */
+async function loadProducts() {
+  if (!sb) return;
+  showSkel();
+  const { data, error } = await sb
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) { toast('Failed to load products: ' + error.message, 'err'); return; }
+  products = data || [];
+  render();
+}
+
+/* ───────────────────────────────
+   AUTH
+─────────────────────────────── */
+function setAdmin(on, withToast = true) {
+  isAdmin = on;
+  if (on) {
+    sessionStorage.setItem('sc_admin', '1');
+    document.getElementById('adminBar').style.display = 'flex';
+    document.getElementById('btnLogin').style.display = 'none';
+    document.getElementById('btnAdd').style.display = 'flex';
+    if (withToast) toast('Welcome back, Admin! 👋', 'ok');
+  } else {
+    sessionStorage.removeItem('sc_admin');
+    document.getElementById('adminBar').style.display = 'none';
+    document.getElementById('btnLogin').style.display = 'flex';
+    document.getElementById('btnAdd').style.display = 'none';
+    if (withToast) toast('Logged out', 'inf');
+  }
+  render();
+}
+
+function openLogin() {
+  document.getElementById('pwInput').value = '';
+  document.getElementById('loginErr').style.display = 'none';
+  document.getElementById('loginOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('pwInput').focus(), 120);
+}
+function closeLogin() { document.getElementById('loginOverlay').style.display = 'none'; }
+
+function submitLogin() {
+  const pw = document.getElementById('pwInput').value;
+  if (pw === ADMIN_PASSWORD) { closeLogin(); setAdmin(true); }
+  else document.getElementById('loginErr').style.display = 'flex';
+}
+
+function doLogout() { setAdmin(false); }
+
+/* ───────────────────────────────
+   RENDER
+─────────────────────────────── */
+function getList() {
+  let list = [...products];
+  if (searchQ.trim()) {
+    const q = searchQ.toLowerCase();
+    list = list.filter(p => p.name.toLowerCase().includes(q));
+  }
+  const s = document.getElementById('sortSel').value;
+  if (s === 'newest') list.sort((a,b) => new Date(b.created_at)-new Date(a.created_at));
+  else if (s === 'oldest') list.sort((a,b) => new Date(a.created_at)-new Date(b.created_at));
+  else if (s === 'az') list.sort((a,b) => a.name.localeCompare(b.name));
+  else if (s === 'za') list.sort((a,b) => b.name.localeCompare(a.name));
+  return list;
+}
+
+const BADGE = {
+  new:      ['b-new',      'New'],
+  popular:  ['b-popular',  'Popular'],
+  toprated: ['b-toprated', 'Top Rated'],
+  sale:     ['b-sale',     'Sale'],
+};
+
+function render() {
+  const list = getList();
+  const grid = document.getElementById('productGrid');
+
+  // Update topbar labels
+  if (searchQ.trim()) {
+    document.getElementById('secTtl').textContent = `Results for "${searchQ}"`;
+    document.getElementById('cntPill').textContent = list.length + ' found';
+  } else {
+    document.getElementById('secTtl').textContent = 'All Products';
+    document.getElementById('cntPill').textContent =
+      products.length + (products.length === 1 ? ' item' : ' items');
+  }
+
+  // Empty state
+  if (!list.length) {
+    grid.innerHTML = searchQ.trim()
+      ? `<div class="empty">
+           <div class="empty-ico">🔍</div>
+           <h3>No products found</h3>
+           <p>Nothing matched "<strong>${xe(searchQ)}</strong>". Try a different keyword.</p>
+           <button class="btn-cta" onclick="clearSearch()">Clear Search</button>
+         </div>`
+      : `<div class="empty">
+           <div class="empty-ico">🛒</div>
+           <h3>${isAdmin ? 'Your store is empty' : 'Coming soon!'}</h3>
+           <p>${isAdmin
+             ? 'Click "Add Product" and paste an Amazon link to publish your first item.'
+             : 'Great products are on their way. Check back soon!'}</p>
+           ${isAdmin ? '<button class="btn-cta" onclick="openAdd()">+ Add First Product</button>' : ''}
+         </div>`;
+    return;
+  }
+
+  grid.innerHTML = `<div class="grid">${list.map((p, i) => {
+    const bd = BADGE[p.badge] || null;
+    const delay = Math.min(i * 0.04, 0.4);
+    return `
+    <div class="card" style="animation-delay:${delay}s"
+      onclick="goTo('${encodeURIComponent(p.link)}')">
+      ${bd ? `<div class="card-badge ${bd[0]}">${bd[1]}</div>` : ''}
+      ${isAdmin
+        ? `<button class="card-del"
+             onclick="event.stopPropagation();delProduct('${p.id}')"
+             title="Remove from store">✕</button>`
+        : ''}
+      <div class="card-img-wrap">
+        <img class="card-img" src="${xe(p.image)}" alt="${xe(p.name)}" loading="lazy"
+          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22160%22 height=%22160%22%3E%3Crect width=%22160%22 height=%22160%22 fill=%22%23eeebe5%22/%3E%3Ctext x=%2280%22 y=%2285%22 text-anchor=%22middle%22 font-size=%2212%22 fill=%22%23ccc%22%3ENo image%3C/text%3E%3C/svg%3E'"/>
+        <div class="card-hov">
+          <div class="card-hov-pill">↗ View on Amazon</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-name">${xe(p.name)}</div>
+        ${p.price ? `<div class="card-price">${xe(p.price)}</div>` : ''}
+        <div class="card-foot">
+          <div class="amz-tag">
+            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+            Amazon
+          </div>
+          <div class="card-arrow">↗</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function showSkel() {
+  document.getElementById('productGrid').innerHTML =
+    `<div class="skel-grid">${Array(8).fill(`
+      <div class="skel-card">
+        <div class="skel-img"></div>
+        <div class="skel-body">
+          <div class="skel-line"></div>
+          <div class="skel-line"></div>
+          <div class="skel-line s"></div>
+        </div>
+      </div>`).join('')}</div>`;
+  document.getElementById('cntPill').textContent = 'Loading…';
+}
+
+function xe(s) {
+  return String(s || '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function goTo(enc) { window.open(decodeURIComponent(enc), '_blank', 'noopener'); }
+
+/* ───────────────────────────────
+   SEARCH
+─────────────────────────────── */
+document.getElementById('searchInput').addEventListener('input', e => {
+  searchQ = e.target.value;
+  const hasVal = !!searchQ;
+  document.getElementById('searchClr').style.display = hasVal ? 'block' : 'none';
+  document.getElementById('searchIco').style.display = hasVal ? 'none' : 'block';
+  render();
+});
+function clearSearch() {
+  searchQ = '';
+  document.getElementById('searchInput').value = '';
+  document.getElementById('searchClr').style.display = 'none';
+  document.getElementById('searchIco').style.display = 'block';
+  render();
+}
+
+/* ───────────────────────────────
+   DELETE
+─────────────────────────────── */
+async function delProduct(id) {
+  if (!confirm('Remove this product from the store?')) return;
+  const { error } = await sb.from('products').delete().eq('id', id);
+  if (error) { toast('Delete failed: ' + error.message, 'err'); return; }
+  products = products.filter(p => p.id != id);
+  render();
+  toast('Product removed', 'inf');
+}
+
+/* ───────────────────────────────
+   ADD PRODUCT MODAL
+─────────────────────────────── */
+function openAdd() {
+  prevData = null;
+  ['linkInput','nameInput','priceInput','imgInput'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('badgeInput').value = '';
+  document.getElementById('stBox').style.display = 'none';
+  document.getElementById('prevBox').style.display = 'none';
+  document.getElementById('detailFields').style.display = 'none';
+  document.getElementById('addBtn').disabled = true;
+  document.getElementById('addOverlay').style.display = 'flex';
+  setTimeout(() => document.getElementById('linkInput').focus(), 120);
+}
+function closeAdd() { document.getElementById('addOverlay').style.display = 'none'; }
+
+// Auto-detect when Amazon URL pasted
+document.getElementById('linkInput').addEventListener('input', e => {
+  const v = e.target.value.trim();
+  clearTimeout(window._lt);
+  if (/amazon|amzn\.to/i.test(v)) {
+    window._lt = setTimeout(() => parseAmazonLink(v), 650);
+  } else {
+    document.getElementById('stBox').style.display = 'none';
+    document.getElementById('prevBox').style.display = 'none';
+    document.getElementById('detailFields').style.display = 'none';
+    document.getElementById('addBtn').disabled = true;
+    prevData = null;
+  }
+});
+
+async function parseAmazonLink(url) {
+  const sb2 = document.getElementById('stBox');
+  sb2.style.display = 'flex';
+  sb2.className = 'st-box st-loading';
+  sb2.innerHTML = '<div class="spin"></div><span>Detecting product from link…</span>';
+  document.getElementById('prevBox').style.display = 'none';
+  document.getElementById('detailFields').style.display = 'none';
+  document.getElementById('addBtn').disabled = true;
+  prevData = null;
+
+  // Extract ASIN from URL
+  const m = url.match(/\/dp\/([A-Z0-9]{10})|\/gp\/product\/([A-Z0-9]{10})/);
+  const asin = m ? (m[1] || m[2]) : null;
+
+  await new Promise(r => setTimeout(r, 500)); // small delay for UX
+
+  if (!asin && !/amzn\.to\//i.test(url)) {
+    sb2.className = 'st-box st-error';
+    sb2.innerHTML = '⚠️ Could not detect ASIN. Paste a full Amazon product page URL.';
+    return;
+  }
+
+  sb2.style.display = 'none';
+
+  const img = asin ? `https://m.media-amazon.com/images/I/${asin}._AC_UL480_FMwebp_QL65_.jpg` : '';
+  prevData = { url, asin, img };
+
+  // Populate preview
+  document.getElementById('prevImg').src = img || 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2278%22 height=%2278%22%3E%3Crect width=%2278%22 height=%2278%22 fill=%22%23eeebe5%22/%3E%3C/svg%3E';
+  document.getElementById('prevName').textContent = asin ? `Amazon Product — ${asin}` : 'Amazon Product';
+  document.getElementById('prevAsin').textContent = asin ? `ASIN: ${asin}` : '';
+  document.getElementById('prevPrice').textContent = '—';
+  document.getElementById('prevBox').style.display = 'flex';
+  document.getElementById('prevBox').className = 'preview lit';
+  document.getElementById('detailFields').style.display = 'block';
+  document.getElementById('addBtn').disabled = false;
+
+  // Live preview updates
+  document.getElementById('nameInput').oninput = e => {
+    document.getElementById('prevName').textContent =
+      e.target.value || (asin ? `Amazon Product — ${asin}` : 'Amazon Product');
+  };
+  document.getElementById('priceInput').oninput = e => {
+    document.getElementById('prevPrice').textContent = e.target.value || '—';
+  };
+  document.getElementById('imgInput').oninput = e => {
+    document.getElementById('prevImg').src = e.target.value || img;
+  };
+}
+
+async function submitAdd() {
+  if (!prevData || !sb) return;
+  const name = document.getElementById('nameInput').value.trim()
+    || (prevData.asin ? `Amazon Product (${prevData.asin})` : 'Amazon Product');
+  const price   = document.getElementById('priceInput').value.trim();
+  const badge   = document.getElementById('badgeInput').value;
+  const custImg = document.getElementById('imgInput').value.trim();
+  const link    = document.getElementById('linkInput').value.trim();
+  const image   = custImg || prevData.img || '';
+
+  // Show loading state
+  const addBtn = document.getElementById('addBtn');
+  addBtn.disabled = true;
+  addBtn.innerHTML = '<div class="spin wh"></div> Publishing…';
+
+  const { data, error } = await sb
+    .from('products')
+    .insert([{ name, price, badge, link, image }])
+    .select()
+    .single();
+
+  if (error) {
+    toast('Error saving product: ' + error.message, 'err');
+    addBtn.disabled = false;
+    addBtn.innerHTML = 'Publish to Store';
+    return;
+  }
+
+  products.unshift(data);
+  render();
+  closeAdd();
+  toast('🎉 Product published! Visitors can see it now.', 'ok');
+}
+
+/* ───────────────────────────────
+   TOAST
+─────────────────────────────── */
+function toast(msg, type = 'inf') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `toast ${type}`;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
